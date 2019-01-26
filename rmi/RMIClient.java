@@ -25,10 +25,16 @@ public class RMIClient {
 		int numMessages = Integer.parseInt(args[1]);
 
 		// TO-DO: Initialise Security Manager
+		if (System.getSecurityManager() == null){
+			System.setSecurityManager(new RMISecurityManager());
+		}
 
 		// TO-DO: Bind to RMIServer
 
 		// TO-DO: Attempt to send messages the specified number of times
+		for (int n = 0; n < numMessages; n++) {
+			iRMIServer.receiveMessage(new MessageInfo(numMessages,n));
+		}
 
 	}
 }
