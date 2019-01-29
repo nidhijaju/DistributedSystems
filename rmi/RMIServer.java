@@ -43,8 +43,12 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerI {
 		RMIServer rmis = null;
 
 		// TO-DO: Initialise Security Manager
+		if(System.SetSecurityManager == null) {
+			new System.getSecurityManager
+		}
 
 		// TO-DO: Instantiate the server class
+		
 
 		// TO-DO: Bind to RMI registry
 
