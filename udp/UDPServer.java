@@ -35,11 +35,13 @@ public class UDPServer {
 		MessageInfo msg = null;
 
 		// TO-DO: Use the data to construct a new MessageInfo object
+		msg = new MessageInfo(data);
 
 		// TO-DO: On receipt of first message, initialise the receive buffer
 		if(receivedMessages == null) {
 			totalMessages = 0;
-			receivedMessages = new int [msg.totalMessages]; //agrim
+			// creates array of 'totalMessages' zeros
+			receivedMessages = new int[msg.totalMessages];
 		}
 
 		// TO-DO: Log receipt of the message
@@ -48,13 +50,16 @@ public class UDPServer {
 
 		// TO-DO: If this is the last expected message, then identify
 		//        any missing messages
+		if (totalMessages == msg.totalMessages) {
+
+		}
 
 	}
 
 
 	public UDPServer(int rp) {
 		// TO-DO: Initialise UDP socket for receiving data
-		Socket UDPSocket = new Socket(/*IP ADDRESS, PORT NUMBER*/);
+		recvSoc = new DatagramSocket(rp);
 
 		// Done Initialisation
 		System.out.println("UDPServer ready");
@@ -71,7 +76,7 @@ public class UDPServer {
 		recvPort = Integer.parseInt(args[0]);
 
 		// TO-DO: Construct Server object and start it by calling run().
-		Server serverport = new Server();
+		UDPServer serverport = new UDPServer(recvPort);
 		serverport.run();
 
 	}
