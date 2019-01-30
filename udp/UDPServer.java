@@ -26,6 +26,8 @@ public class UDPServer {
 
 		// TO-DO: Receive the messages and process them by calling processMessage(...).
 		//        Use a timeout (e.g. 30 secs) to ensure the program doesn't block forever
+
+
 		
 
 	}
@@ -36,6 +38,14 @@ public class UDPServer {
 
 		// TO-DO: Use the data to construct a new MessageInfo object
 
+		try{
+			msg = new MessageInfo(data);
+		}
+		catch(Exception e) {
+			System.out.println("Error creating MessageInfo object, exception: " + e);
+			System.exit(-1);
+		}
+
 		// TO-DO: On receipt of first message, initialise the receive buffer
 		if(receivedMessages == null) {
 			totalMessages = 0;
@@ -43,7 +53,7 @@ public class UDPServer {
 		}
 
 		// TO-DO: Log receipt of the message
-		totalMessages++;
+		//totalMessages++; agrim: do we need this?
 		receivedMessages[msg.messageNum] = 1;
 
 		// TO-DO: If this is the last expected message, then identify
@@ -54,7 +64,14 @@ public class UDPServer {
 
 	public UDPServer(int rp) {
 		// TO-DO: Initialise UDP socket for receiving data
-		Socket UDPSocket = new Socket(/*IP ADDRESS, PORT NUMBER*/);
+		try {
+			recvSoc = new DatagramSocket(rp);
+		}
+
+		catch(SocketException e) {
+			System.out.println("UDP Socket error, exception: " + e);
+			System.exit(-1);
+		}
 
 		// Done Initialisation
 		System.out.println("UDPServer ready");
