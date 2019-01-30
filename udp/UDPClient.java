@@ -52,7 +52,7 @@ public class UDPClient {
 		try {
 			sendSoc = new DatagramSocket();
 		}
-		catch {
+		catch (SocketException e) {
 			System.out.println("Error sending socket data, exception: " + e); 
 			//print exception message
 		}
@@ -77,9 +77,9 @@ public class UDPClient {
 		// TO-DO: build the datagram packet and send it to the server
 
 		pktData = payload.getBytes();
-		payloadSize = pktData.length();
+		payloadSize = pktData.length;
 
-		pkt = new DatagramPacket(pktData, payloadSize, destAddr, destPort)
+		pkt = new DatagramPacket(pktData, payloadSize, destAddr, destPort);
 
 		try {
 			sendSoc.send(pkt);

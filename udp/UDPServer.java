@@ -35,7 +35,12 @@ public class UDPServer {
 		MessageInfo msg = null;
 
 		// TO-DO: Use the data to construct a new MessageInfo object
-		msg = new MessageInfo(data);
+		try {
+			msg = new MessageInfo(data);
+		}
+		catch (Exception e) {
+			System.out.println("Error: ");
+		}
 
 		// TO-DO: On receipt of first message, initialise the receive buffer
 		if(receivedMessages == null) {
@@ -59,7 +64,13 @@ public class UDPServer {
 
 	public UDPServer(int rp) {
 		// TO-DO: Initialise UDP socket for receiving data
-		recvSoc = new DatagramSocket(rp);
+		try {
+			recvSoc = new DatagramSocket(rp);
+		}
+		catch (SocketException e) {
+			System.out.println("Error creating socket on port: " + rp);
+			System.exit(-1);
+		}
 
 		// Done Initialisation
 		System.out.println("UDPServer ready");
