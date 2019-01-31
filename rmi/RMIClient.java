@@ -3,6 +3,7 @@
  */
 package rmi;
 
+import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -26,7 +27,7 @@ public class RMIClient {
 
 		// TO-DO: Initialise Security Manager
 		if (System.getSecurityManager() == null){
-			System.setSecurityManager(new RMISecurityManager());
+			System.setSecurityManager(new SecurityManager());
 		}
 
 		// TO-DO: Bind to RMIServer
@@ -47,10 +48,18 @@ public class RMIClient {
 		catch (NotBoundException e){ 
 			System.out.println("Not bound exception error: " + e);
 		}
+		catch (MalformedURLException e) {
+			System.out.println("Malformed URL Exception error: " + e);
+		}
 
-		// TO-DO: Attempt to send messages the specified number of times
-		for (int n = 0; n < numMessages; n++) {
-			iRMIServer.receiveMessage(new MessageInfo(numMessages,n));
+		// TO-DO: Attempt to send messages the specified number of time
+		try {
+			for (int n = 0; n < numMessages; n++) {
+				iRMIServer.receiveMessage(new MessageInfo(numMessages,n));
+			}
+		}
+		catch (RemoteException e){ 
+			System.out.println("Remote exception error: " + e);
 		}
 
 	}
