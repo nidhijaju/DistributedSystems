@@ -5,6 +5,7 @@ package rmi;
 
 import java.net.MalformedURLException;
 import java.rmi.Naming;
+import java.rmi.RMISecurityManager;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -43,15 +44,38 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerI {
 		RMIServer rmis = null;
 
 		// TO-DO: Initialise Security Manager
-		if(System.SetSecurityManager == null) {
-			new System.getSecurityManager();
+		if(System.getSecurityManager() == null) {
+			System.setSecurityManager(new RMISecurityManager());
 		}
 
 		// TO-DO: Instantiate the server class
-		
+		try {
+			rmis = new RMIServer();
+		}
+		catch (Exception e) {
+			
+		}
 
 		// TO-DO: Bind to RMI registry
+		try {
 
+			iRMIServer = (RMIServerI) Naming.lookup(urlServer);
+
+			for (int i = 0; i < numMessages; i++){
+				MessageInfo new_message = new MessageInfo(numMessages, i);
+				iRMIServer.receiveMessage(new_message);
+			}
+
+		}
+		catch (RemoteException e){ 
+			System.out.println("Remote exception error: " + e);
+		}
+		catch (NotBoundException e){ 
+			System.out.println("Not bound exception error: " + e);
+		}
+		catch (MalformedURLException e) {
+			System.out.println("Malformed URL Exception error: " + e);
+		}
 	}
 
 	protected static void rebindServer(String serverURL, RMIServer server) {
