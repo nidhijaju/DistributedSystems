@@ -31,6 +31,23 @@ public class RMIClient {
 
 		// TO-DO: Bind to RMIServer
 
+		try {
+
+			iRMIServer = (RMIServerI) Naming.lookup(urlServer);
+
+			for (int i = 0; i < numMessages; i++){
+				MessageInfo new_message = new MessageInfo(numMessages, i);
+				iRMIServer.receiveMessage(new_message);
+			}
+
+		}
+		catch (RemoteException e){ 
+			System.out.println("Remote exception error: " + e);
+		}
+		catch (NotBoundException e){ 
+			System.out.println("Not bound exception error: " + e);
+		}
+
 		// TO-DO: Attempt to send messages the specified number of times
 		for (int n = 0; n < numMessages; n++) {
 			iRMIServer.receiveMessage(new MessageInfo(numMessages,n));
