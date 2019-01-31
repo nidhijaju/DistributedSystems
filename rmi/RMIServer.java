@@ -25,7 +25,7 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerI {
 		// TO-DO: On receipt of first message, initialise the receive buffer
 		if(receivedMessages == null) {
 			totalMessages = 0;
-			receivedMessages = new int(msg.totalMessages);
+			receivedMessages = new int[msg.totalMessages];
 		}
 
 		// TO-DO: Log receipt of the message
@@ -44,7 +44,7 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerI {
 
 		// TO-DO: Initialise Security Manager
 		if(System.SetSecurityManager == null) {
-			new System.getSecurityManager
+			new System.getSecurityManager();
 		}
 
 		// TO-DO: Instantiate the server class

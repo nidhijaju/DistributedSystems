@@ -26,7 +26,15 @@ public class UDPServer {
 
 		// TO-DO: Receive the messages and process them by calling processMessage(...).
 		//        Use a timeout (e.g. 30 secs) to ensure the program doesn't block forever
-
+		try{
+			recvSoc.setSoTimeout(30000);
+			recvSoc.receive(pac);
+			processMessage(new String(pac.getData()));
+		}
+		catch(SocketTimeException e){
+			System.out.println("Error: Timeout Exception");
+			//should print out a summary of what was received before timeout exception?
+		}
 
 		
 
@@ -37,13 +45,6 @@ public class UDPServer {
 		MessageInfo msg = null;
 
 		// TO-DO: Use the data to construct a new MessageInfo object
-		try {
-			msg = new MessageInfo(data);
-		}
-		catch (Exception e) {
-			System.out.println("Error: ");
-		}
-
 		try{
 			msg = new MessageInfo(data);
 		}
@@ -60,13 +61,31 @@ public class UDPServer {
 		}
 
 		// TO-DO: Log receipt of the message
-		//totalMessages++; agrim: do we need this?
+		totalMessages++;
 		receivedMessages[msg.messageNum] = 1;
 
 		// TO-DO: If this is the last expected message, then identify
 		//        any missing messages
 		if (totalMessages == msg.totalMessages) {
-
+			if (receivedMessages == null || totalMessages <= 0) {
+				return; // do nothing because no messages
+			}
+			String MissingMessages = "";
+			for (int i = 0; i <receivedMessages.length; i++) {
+				if (receivedMessages[i] == 0) {
+					MissingMessages += i + ", ";
+				}
+			}	
+			System.out.println("******* SUMMARY *******");
+			Systen.out.println("Number of messages received: " + totalMessages);
+			if (totalMessages == receivedMessages.length) {
+				System.out.println("No missing messages!");
+			}
+			else {
+				System.out.println("Lost Messages: " + missingMessages);
+			}
+			receivedMessages = null;
+			totalMessages = -1;
 		}
 
 	}
