@@ -10,6 +10,8 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.Arrays;
 
+import com.sun.glass.ui.SystemClipboard;
+
 import common.MessageInfo;
 
 public class UDPServer {
@@ -26,15 +28,28 @@ public class UDPServer {
 
 		// TO-DO: Receive the messages and process them by calling processMessage(...).
 		//        Use a timeout (e.g. 30 secs) to ensure the program doesn't block forever
-		try{
-			recvSoc.setSoTimeout(30000);
-			recvSoc.receive(pac);
-			processMessage(new String(pac.getData()));
+		pacSize = 1024;
+		pacData = new byte[pacSize];
+
+		try {
+			pac = new DatagramPacket(pacData,pacSize);
+			try{
+				recvSoc.setSoTimeout(30000);
+				recvSoc.receive(pac);
+				processMessage(new String(pac.getData()));
+			}
+			catch(SocketTimeoutException e){
+				System.out.println("Error: Timeout Exception");
+				//should print out a summary of what was received before timeout exception?
+			}
 		}
-		catch(SocketTimeException e){
-			System.out.println("Error: Timeout Exception");
-			//should print out a summary of what was received before timeout exception?
+		catch (SocketException e) {
+			System.out.println("Socket exception: " + e);
 		}
+		catch (IOException e) {
+			System.out.println("IO exception: " + e);
+		}
+
 
 		
 
@@ -77,12 +92,12 @@ public class UDPServer {
 				}
 			}	
 			System.out.println("******* SUMMARY *******");
-			Systen.out.println("Number of messages received: " + totalMessages);
+			System.out.println("Number of messages received: " + totalMessages);
 			if (totalMessages == receivedMessages.length) {
 				System.out.println("No missing messages!");
 			}
 			else {
-				System.out.println("Lost Messages: " + missingMessages);
+				System.out.println("Lost Messages: " + MissingMessages);
 			}
 			receivedMessages = null;
 			totalMessages = -1;
