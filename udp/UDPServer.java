@@ -10,7 +10,7 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.Arrays;
 
-import com.sun.glass.ui.SystemClipboard;
+//import com.sun.glass.ui.SystemClipboard;
 
 import common.MessageInfo;
 
