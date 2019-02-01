@@ -61,7 +61,7 @@ public class UDPServer {
 
 		// TO-DO: Use the data to construct a new MessageInfo object
 		try{
-			msg = new MessageInfo(data);
+			msg = new MessageInfo(data.trim());
 		}
 		catch(Exception e) {
 			System.out.println("Error creating MessageInfo object, exception: " + e);
@@ -76,8 +76,10 @@ public class UDPServer {
 		}
 
 		// TO-DO: Log receipt of the message
-		totalMessages++;
-		receivedMessages[msg.messageNum] = 1;
+		for (int i = 0; i < msg.totalMessages; i++) {
+			totalMessages++;
+			receivedMessages[msg.messageNum] = 1;
+		}
 
 		// TO-DO: If this is the last expected message, then identify
 		//        any missing messages
