@@ -32,15 +32,21 @@ public class UDPServer {
 		pacData = new byte[pacSize];
 
 		try {
-			pac = new DatagramPacket(pacData,pacSize);
-			try{
-				recvSoc.setSoTimeout(30000);
-				recvSoc.receive(pac);
-				processMessage(new String(pac.getData()));
-			}
-			catch(SocketTimeoutException e){
-				System.out.println("Error: Timeout Exception");
-				//should print out a summary of what was received before timeout exception?
+			while(true){
+				for (int n = 0; n < pacSize; n++) {
+					pacData[n] = 0;
+				}
+				pac = new DatagramPacket(pacData,pacSize);
+				try{
+					recvSoc.setSoTimeout(30000);
+					recvSoc.receive(pac);
+					processMessage(new String(pac.getData()));
+				}
+				catch(SocketTimeoutException e){
+					System.out.println("Error: Timeout Exception");
+					//print out a summary of what was received before timeout exception?
+					System.exit(-1);
+				}
 			}
 		}
 		catch (SocketException e) {
@@ -76,10 +82,8 @@ public class UDPServer {
 		}
 
 		// TO-DO: Log receipt of the message
-		for (int i = 0; i < msg.totalMessages; i++) {
 			totalMessages++;
 			receivedMessages[msg.messageNum] = 1;
-		}
 
 		// TO-DO: If this is the last expected message, then identify
 		//        any missing messages

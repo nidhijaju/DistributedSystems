@@ -25,35 +25,34 @@ public class RMIClient {
 		String urlServer = new String("rmi://" + args[0] + "/RMIServer");
 		int numMessages = Integer.parseInt(args[1]);
 
-		// TO-DO: Initialise Security Manager
-		if (System.getSecurityManager() == null){
-			System.setSecurityManager(new SecurityManager());
-		}
-
-		// TO-DO: Bind to RMIServer
-
 		try {
-
-			iRMIServer = (RMIServerI) Naming.lookup(urlServer);
-
-			for (int i = 0; i < numMessages; i++){
-				MessageInfo new_message = new MessageInfo(numMessages, i);
-				iRMIServer.receiveMessage(new_message);
+			// TO-DO: Initialise Security Manager
+			if (System.getSecurityManager() == null){
+				System.setSecurityManager(new SecurityManager());
 			}
 
-		}
-		catch (RemoteException e){ 
-			System.out.println("Remote exception error: " + e);
-		}
-		catch (NotBoundException e){ 
-			System.out.println("Not bound exception error: " + e);
-		}
-		catch (MalformedURLException e) {
-			System.out.println("Malformed URL Exception error: " + e);
-		}
+			// TO-DO: Bind to RMIServer
 
-		// TO-DO: Attempt to send messages the specified number of time
-		try {
+			try {
+				iRMIServer = (RMIServerI) Naming.lookup(urlServer);
+
+				// for (int i = 0; i < numMessages; i++){
+				// 	MessageInfo new_message = new MessageInfo(numMessages, i);
+				// 	iRMIServer.receiveMessage(new_message);
+				// }
+
+			}
+			// catch (RemoteException e){ 
+			// 	System.out.println("Remote exception error: " + e);
+			// }
+			catch (NotBoundException e){ 
+				System.out.println("Not bound exception error: " + e);
+			}
+			catch (MalformedURLException e) {
+				System.out.println("Malformed URL Exception error: " + e);
+			}
+
+			// TO-DO: Attempt to send messages the specified number of time
 			for (int n = 0; n < numMessages; n++) {
 				iRMIServer.receiveMessage(new MessageInfo(numMessages,n));
 			}

@@ -8,7 +8,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
-import java.net.UnknownHostException; //change
+import java.net.UnknownHostException;
 
 import common.MessageInfo;
 
@@ -64,8 +64,10 @@ public class UDPClient {
 		// TO-DO: Send the messages to the server
 
 		for(tries = 0; tries < countTo; tries++){
-			String sent_message = new String(Integer.toString(countTo) + ";" + Integer.toString(tries));
-			send(sent_message, serverAddr, recvPort);
+			// String sent_message = new String(Integer.toString(countTo) + ";" + Integer.toString(tries));
+			// send(sent_message, serverAddr, recvPort);
+			MessageInfo msg = new MessageInfo(countTo, tries);
+			send(msg.toString(),serverAddr,recvPort);
 		}
 	}
 

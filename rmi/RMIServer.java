@@ -7,6 +7,7 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.RMISecurityManager;
 import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Arrays;
@@ -35,6 +36,27 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerI {
 
 		// TO-DO: If this is the last expected message, then identify
 		//        any missing messages
+		if (totalMessages == msg.totalMessages) {
+			if (receivedMessages == null || totalMessages <= 0) {
+				return;
+			}
+			String MissingMessages = "";
+			for (int i = 0; i <receivedMessages.length; i++) {
+				if (receivedMessages[i] == 0) {
+					MissingMessages += i + ", ";
+				}
+			}
+			System.out.println("******* SUMMARY *******");
+			System.out.println("Number of messages received: " + totalMessages);
+			if (totalMessages == receivedMessages.length) {
+				System.out.println("No missing messages!");
+			}
+			else {
+				System.out.println("Lost Messages: " + MissingMessages);
+			}
+			receivedMessages = null;
+			totalMessages = -1;
+		}	
 
 	}
 
@@ -52,41 +74,30 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerI {
 		try {
 			rmis = new RMIServer();
 		}
-		catch (Exception e) {
-			
+		catch (RemoteException e) {
+			System.out.println("Remote exception error: " + e);
 		}
 
 		// TO-DO: Bind to RMI registry
-		try {
-
-			iRMIServer = (RMIServerI) Naming.lookup(urlServer);
-
-			for (int i = 0; i < numMessages; i++){
-				MessageInfo new_message = new MessageInfo(numMessages, i);
-				iRMIServer.receiveMessage(new_message);
-			}
-
-		}
-		catch (RemoteException e){ 
-			System.out.println("Remote exception error: " + e);
-		}
-		catch (NotBoundException e){ 
-			System.out.println("Not bound exception error: " + e);
-		}
-		catch (MalformedURLException e) {
-			System.out.println("Malformed URL Exception error: " + e);
-		}
+		rebindServer("localhost", rmis);
 	}
 
 	protected static void rebindServer(String serverURL, RMIServer server) {
-
+		Registry reg;
 		// TO-DO:
 		// Start / find the registry (hint use LocateRegistry.createRegistry(...)
 		// If we *know* the registry is running we could skip this (eg run rmiregistry in the start script)
-
+		try {
+			reg = LocateRegistry.createRegistry(1099);
+		
 		// TO-DO:
 		// Now rebind the server to the registry (rebind replaces any existing servers bound to the serverURL)
 		// Note - Registry.rebind (as returned by createRegistry / getRegistry) does something similar but
 		// expects different things from the URL field.
+			reg.rebind("RMIServer", server);
+		}
+		catch (RemoteException e) {
+			System.out.println("Remote exception error: " + e);
+		}
 	}
 }
