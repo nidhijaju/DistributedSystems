@@ -14,6 +14,8 @@ import common.MessageInfo;
 
 public class UDPClient {
 
+	private final int SLEEP_INTERVAL = 0;
+
 	private DatagramSocket sendSoc;
 
 	public static void main(String[] args) {
@@ -68,6 +70,13 @@ public class UDPClient {
 			// send(sent_message, serverAddr, recvPort);
 			MessageInfo msg = new MessageInfo(countTo, tries);
 			send(msg.toString(),serverAddr,recvPort);
+			try {
+				Thread.sleep(SLEEP_INTERVAL);
+			}
+			catch (InterruptedException e) {
+				System.out.println("Interrupted Exception" + e);
+				System.exit (-1);
+			}
 		}
 	}
 

@@ -28,7 +28,7 @@ public class UDPServer {
 
 		// TO-DO: Receive the messages and process them by calling processMessage(...).
 		//        Use a timeout (e.g. 30 secs) to ensure the program doesn't block forever
-		pacSize = 1024;
+		pacSize = 50;
 		pacData = new byte[pacSize];
 
 		try {
@@ -45,6 +45,25 @@ public class UDPServer {
 				catch(SocketTimeoutException e){
 					System.out.println("Error: Timeout Exception");
 					//print out a summary of what was received before timeout exception?
+					if (receivedMessages == null || totalMessages <= 0) {
+						return; // do nothing because no messages
+					}
+					String MissingMessages = "";
+					for (int i = 0; i <receivedMessages.length; i++) {
+						if (receivedMessages[i] == 0) {
+							MissingMessages += i + ", ";
+						}
+					}	
+					System.out.println("******* SUMMARY *******");
+					System.out.println("Number of messages received: " + totalMessages);
+					if (totalMessages == receivedMessages.length) {
+						System.out.println("No missing messages!");
+					}
+					else {
+						System.out.println("Lost Messages: " + MissingMessages);
+					}
+					receivedMessages = null;
+					totalMessages = -1;
 					System.exit(-1);
 				}
 			}
@@ -82,12 +101,14 @@ public class UDPServer {
 		}
 
 		// TO-DO: Log receipt of the message
-			totalMessages++;
-			receivedMessages[msg.messageNum] = 1;
+		totalMessages++;
+		receivedMessages[msg.messageNum] = 1;
+		//System.out.println("total messages: " + totalMessages);
+		//System.out.println("message num: " + msg.messageNum);
 
 		// TO-DO: If this is the last expected message, then identify
 		//        any missing messages
-		if (totalMessages == msg.totalMessages) {
+		if (msg.messageNum + 1 == msg.totalMessages) {
 			if (receivedMessages == null || totalMessages <= 0) {
 				return; // do nothing because no messages
 			}
