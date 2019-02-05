@@ -29,7 +29,7 @@ public class RMIClient {
 			// TO-DO: Initialise Security Manager
 			if (System.getSecurityManager() == null){
 				System.setSecurityManager(new SecurityManager());
-				System.out.println("Initlised Security Manager");
+				System.out.println("Intialised Security Manager");
 			}
 
 			// TO-DO: Bind to RMIServer
@@ -55,9 +55,9 @@ public class RMIClient {
 
 			// TO-DO: Attempt to send messages the specified number of time
 			for (int n = 0; n < numMessages; n++) {
-				System.out.println("Sending message: " + n);
 				iRMIServer.receiveMessage(new MessageInfo(numMessages,n));
 			}
+			System.out.println("Sent all messages!");
 		}
 		catch (RemoteException e){ 
 			System.out.println("Remote exception error in main: " + e);
