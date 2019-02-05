@@ -75,7 +75,7 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerI {
 			rmis = new RMIServer();
 		}
 		catch (RemoteException e) {
-			System.out.println("Remote exception error: " + e);
+			System.out.println("Remote exception error when instatiating server class: " + e);
 		}
 
 		// TO-DO: Bind to RMI registry
@@ -97,7 +97,7 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerI {
 			reg.rebind("RMIServer", server);
 		}
 		catch (RemoteException e) {
-			System.out.println("Remote exception error: " + e);
+			System.out.println("Remote exception error when rebinding Server: " + e);
 		}
 	}
 }

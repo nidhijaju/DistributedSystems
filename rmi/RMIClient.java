@@ -58,7 +58,7 @@ public class RMIClient {
 			}
 		}
 		catch (RemoteException e){ 
-			System.out.println("Remote exception error: " + e);
+			System.out.println("Remote exception error in main: " + e);
 		}
 
 	}
