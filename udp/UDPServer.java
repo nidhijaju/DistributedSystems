@@ -17,9 +17,10 @@ import common.MessageInfo;
 public class UDPServer {
 
 	private DatagramSocket recvSoc;
-	private int totalMessages = -1;
-	private int[] receivedMessages;
-	private boolean close;
+	private static int totalMessages = -1;
+	private static int[] receivedMessages = null;
+	private static int messagesReceived = 0;
+	private boolean close = false;
 
 	private void run() {
 		int				pacSize;
@@ -28,44 +29,32 @@ public class UDPServer {
 
 		// TO-DO: Receive the messages and process them by calling processMessage(...).
 		//        Use a timeout (e.g. 30 secs) to ensure the program doesn't block forever
-		pacSize = 50;
+		pacSize = 256;
 		pacData = new byte[pacSize];
 
 		try {
-			while(true){
-				for (int n = 0; n < pacSize; n++) {
-					pacData[n] = 0;
-				}
+			while(!close){
+				// for (int n = 0; n < pacSize; n++) {
+				// 	pacData[n] = 0;
+				// }
 				pac = new DatagramPacket(pacData,pacSize);
 				try{
 					recvSoc.setSoTimeout(30000);
 					recvSoc.receive(pac);
-					processMessage(new String(pac.getData()));
 				}
 				catch(SocketTimeoutException e){
-					System.out.println("Error: Timeout Exception");
 					//print out a summary of what was received before timeout exception?
-					if (receivedMessages == null || totalMessages <= 0) {
-						return; // do nothing because no messages
+					if (totalMessages != -1) {
+						print_results();
 					}
-					String MissingMessages = "";
-					for (int i = 0; i <receivedMessages.length; i++) {
-						if (receivedMessages[i] == 0) {
-							MissingMessages += i + ", ";
-						}
-					}	
-					System.out.println("******* SUMMARY *******");
-					System.out.println("Number of messages received: " + totalMessages);
-					if (totalMessages == receivedMessages.length) {
-						System.out.println("No missing messages!");
-					}
-					else {
-						System.out.println("Lost Messages: " + MissingMessages);
-					}
-					receivedMessages = null;
-					totalMessages = -1;
+					// receivedMessages = null;
+					// totalMessages = -1;
+					System.out.println("Error: Timeout Exception");
 					System.exit(-1);
 				}
+
+				processMessage(new String(pac.getData()));
+
 			}
 		}
 		catch (SocketException e) {
@@ -94,42 +83,44 @@ public class UDPServer {
 		}
 
 		// TO-DO: On receipt of first message, initialise the receive buffer
-		if(receivedMessages == null) {
-			totalMessages = 0;
-			// creates array of 'totalMessages' zeros
-			receivedMessages = new int[msg.totalMessages];
+		if(receivedMessages == null || totalMessages < 0) {
+			totalMessages = msg.totalMessages;
+			receivedMessages = new int[totalMessages];
 		}
 
 		// TO-DO: Log receipt of the message
-		totalMessages++;
+		messagesReceived++;
 		receivedMessages[msg.messageNum] = 1;
-		//System.out.println("total messages: " + totalMessages);
-		//System.out.println("message num: " + msg.messageNum);
+		// System.out.println("total messages: " + totalMessages);
+		// System.out.println("message num: " + msg.messageNum);
 
 		// TO-DO: If this is the last expected message, then identify
 		//        any missing messages
-		if (msg.messageNum + 1 == msg.totalMessages) {
-			if (receivedMessages == null || totalMessages <= 0) {
-				return; // do nothing because no messages
-			}
-			String MissingMessages = "";
+		if (messagesReceived == totalMessages) {
+			print_results();
+			close = true;
+			// receivedMessages = null;
+			// totalMessages = -1;
+		}
+
+	}
+
+	public static void print_results() {
+		String MissingMessages = "";
 			for (int i = 0; i <receivedMessages.length; i++) {
 				if (receivedMessages[i] == 0) {
 					MissingMessages += i + ", ";
 				}
 			}	
 			System.out.println("******* SUMMARY *******");
-			System.out.println("Number of messages received: " + totalMessages);
+			System.out.println("Number of Messages Received: " + totalMessages);
 			if (totalMessages == receivedMessages.length) {
 				System.out.println("No missing messages!");
 			}
 			else {
+				System.out.println("Number of Lost Messages: " + (totalMessages - messagesReceived));
 				System.out.println("Lost Messages: " + MissingMessages);
 			}
-			receivedMessages = null;
-			totalMessages = -1;
-		}
-
 	}
 
 
