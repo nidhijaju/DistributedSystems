@@ -49,7 +49,7 @@ public class UDPServer {
 					}
 					// receivedMessages = null;
 					// totalMessages = -1;
-					System.out.println("Error: Timeout Exception");
+					
 					System.exit(-1);
 				}
 
@@ -92,11 +92,11 @@ public class UDPServer {
 		messagesReceived++;
 		receivedMessages[msg.messageNum] = 1;
 		// System.out.println("total messages: " + totalMessages);
-		// System.out.println("message num: " + msg.messageNum);
+		// System.out.println("message received: " + messagesReceived);
 
 		// TO-DO: If this is the last expected message, then identify
 		//        any missing messages
-		if (messagesReceived == totalMessages) {
+		if (msg.messageNum + 1 == totalMessages) {
 			print_results();
 			close = true;
 			// receivedMessages = null;
