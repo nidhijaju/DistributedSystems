@@ -17,8 +17,8 @@ public class RMIClient {
 		RMIServerI iRMIServer = null;
 
 		// Check arguments for Server host and number of messages
-		if (args.length < 2){
-			System.out.println("Needs 2 arguments: ServerHostName/IPAddress, TotalMessageCount");
+		if (args.length < 3){
+			System.out.println("Needs 2 arguments: ServerHostName/IPAddress, RemoteObjectName, TotalMessageCount");
 			System.exit(-1);
 		}
 
@@ -37,15 +37,10 @@ public class RMIClient {
 			try {
 				iRMIServer = (RMIServerI) Naming.lookup(urlServer);
 				System.out.println("Bound to RMIServer");
-				// for (int i = 0; i < numMessages; i++){
-				// 	MessageInfo new_message = new MessageInfo(numMessages, i);
-				// 	iRMIServer.receiveMessage(new_message);
-				// }
-
 			}
-			// catch (RemoteException e){ 
-			// 	System.out.println("Remote exception error: " + e);
-			// }
+			catch (RemoteException e){ 
+				System.out.println("Remote exception error: " + e);
+			}
 			catch (NotBoundException e){ 
 				System.out.println("Not bound exception error: " + e);
 			}
